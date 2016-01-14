@@ -12,4 +12,6 @@
 */
 
 Route::resource('/','BooksController');
+Route::get('/{id}/edit','BooksController@edit');
+Route::post('/{id}/update','BooksController@update');
 Route::get('/delete/{id}','BooksController@destroy');

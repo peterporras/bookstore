@@ -13,27 +13,27 @@
 @endif
 {{ Form::open(array('url' => '/','enctype'=>'multipart/form-data')) }}
 	<div class="form-group">
-		<label for="booktitle">Title</label>
+		<label for="booktitle">{{trans('labels.title')}}</label>
 		<input type="text" name="title" class="form-control" id="booktitle" placeholder="Title">
 	</div>
 	<div class="form-group">
-		<label for="bookauthor">Author</label>
+		<label for="bookauthor">{{trans('labels.author')}}</label>
 		<input type="text" name="author" class="form-control" id="bookauthor" placeholder="Author">
 	</div>
 	<div class="form-group">
-		<label for="bookgenre">Genre</label>
+		<label for="bookgenre">{{trans('labels.genre')}}</label>
 		<input type="text" name="genre" class="form-control" id="bookgenre" placeholder="Genre">
 	</div>
 	<div class="form-group">
-		<label for="bookdescription">Description</label>
+		<label for="bookdescription">{{trans('labels.description')}}</label>
 		<textarea name="description" class="form-control" id="bookdescription" placeholder="Description"></textarea>
 	</div>
 	<div class="form-group">
-		<label for="bookpublished">Date Published</label>
+		<label for="bookpublished">{{trans('labels.datepublished')}}</label>
 		<input type="text" name="published" class="form-control" id="bookpublished" placeholder="">
 	</div>
 	<div class="form-group">
-		<label for="bookformat">Format</label>
+		<label for="bookformat">{{trans('labels.format')}}</label>
 		<select type="text" name="format" class="form-control" id="bookformat">
 			<option value="Kindle">Kindle</option>
 			<option value="Hardcover">Hardcover</option>
@@ -42,14 +42,14 @@
 		</select>
 	</div>
 	<div class="form-group">
-		<label for="bookcover">Book Cover Photo</label>
+		<label for="bookcover">{{trans('labels.bookcover')}}</label>
 		<input type="file" name="image" id="bookcover">
 		<p class="help-block"></p>
 	</div>
 	<hr>
 	<button type="submit" class="btn btn-success">
 		<i class="glyphicon glyphicon-floppy-saved"></i>
-		Submit
+		{{trans('labels.submit')}}
 	</button>
 {{ Form::close() }}
 @stop

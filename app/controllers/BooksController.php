@@ -19,7 +19,7 @@ class BooksController extends BaseController {
 	{
 		$books = DB::table('books')->paginate(5);
 		
-		$this->params['title'] = 'Books';
+		$this->params['title'] = Lang::get('labels.books');
 		$this->params['books'] = $books;
 		return View::make('books.index',$this->params);
 	}
@@ -32,7 +32,7 @@ class BooksController extends BaseController {
 	 */
 	public function create()
 	{
-		$this->params['title'] = 'Add Books';
+		$this->params['title'] = Lang::get('labels.addbooks');
 		return View::make('books.create',$this->params);
 	}
 
@@ -86,7 +86,7 @@ class BooksController extends BaseController {
 
 			$book->save();
 
-			return Redirect::to('/')->with('success', 'Book Successfuly Added!');
+			return Redirect::to('/')->with('success', Lang::get('labels.bookadded'));
 		}
 	}
 
@@ -99,7 +99,7 @@ class BooksController extends BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		
 	}
 
 
@@ -111,7 +111,15 @@ class BooksController extends BaseController {
 	 */
 	public function edit($id)
 	{
-		//
+		// check if book exists
+		$book = Books::find($id);
+		if( !$book ){
+			return Redirect::to('/')->with('error', Lang::get('labels.booknotfound'));
+		}
+		
+		$this->params['title'] = 'Edit Book';
+		$this->params['book'] = $book;
+		return View::make('books.edit',$this->params);
 	}
 
 
@@ -123,7 +131,61 @@ class BooksController extends BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		// check if book exists
+		$book = Books::find($id);
+		if( !$book ){
+			return Redirect::to('/')->with('error', Lang::get('labels.booknotfound'));
+		}
+
+		// check if method is post
+		if( Request::isMethod('post') ) {
+		    $input = Input::all();
+		    $validator = Validator::make(
+		    	$input, 
+		    	array(
+				    'title' => 'required',
+				    'author' => 'required',
+				    'genre' => 'required',
+				)
+			);
+
+			// check if data is validated
+		    if( $validator->fails() ) {
+			    // redirect with errors if the given data did not pass validation
+		    	return Redirect::to($id.'/edit')->withErrors($validator);
+			}
+
+			$book->title = Input::get('title');
+		    $book->author = Input::get('author');
+		    $book->genre = Input::get('genre');
+		    $book->description = Input::get('description');
+		    $book->published = Input::get('published');
+		    $book->format = Input::get('format');
+
+			// check if an image is added.
+			if( Input::hasFile('image') ) {
+
+				$destinationPath = public_path() . '/uploads/';
+				$original_filename = Input::file('image')->getClientOriginalName();
+	            $extension = Input::file('image')->getClientOriginalExtension();
+	            $filename = md5( uniqid().$original_filename );
+
+				// check if there's an image in the record.
+				if( $book->image ){
+					// delete image and replace
+					unlink($destinationPath.$book->image);
+				}
+
+				// save file
+	            Input::file('image')->move( $destinationPath, $filename.'.'.$extension );
+                $book->image = $filename.'.'.$extension;
+
+			}
+
+			$book->save();
+
+			return Redirect::to($id.'/edit')->with('success', Lang::get('labels.bookupdated'));
+		}
 	}
 
 
@@ -138,11 +200,11 @@ class BooksController extends BaseController {
 		
 		$book = Books::find($id);
 		if( !$book ){
-			return Redirect::to('/')->with('error', 'Book not found!');
+			return Redirect::to('/')->with('error', Lang::get('labels.booknotfound'));
 		}
 
 		$book->delete();
-		return Redirect::to('/')->with('success', 'Book successfuly removed!');
+		return Redirect::to('/')->with('success', Lang::get('labels.bookremoved'));
 	}
 
 
